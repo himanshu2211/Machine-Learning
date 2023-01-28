@@ -1,0 +1,60 @@
+---
+title: "Rocket_fuel_case_study"
+output: pdf_document
+date: "2022-10-31"
+df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# set globle options, use echo=true to let Rmd output all the codes along with the results.
+# use str(knitr::opts_chunk$get()) command to see all settings
+```
+
+Load some libraries we will use.
+
+```{r}
+# Importing required libraries
+library(knitr)
+library(dplyr)
+library(jtools)
+library(rcompanion)
+library(ggplot2)
+library(car)
+```
+
+```{r}
+rm(list = ls()) # Clear the workspace
+```
+
+### Starting by reading in the data and doing a simple summary of the variables.
+
+```{r}
+
+markdown <- read.csv('rocketfuel_deciles.csv')  # load the data file
+summary(markdown)  # give a descriptive summary
+
+```
+
+Statistic Summary :
+There are 6 variables as mentioned in the case study. Average for tor_impr (e total number of ad impressions the user encountered) is about 25 while the median is 13.
+
+```{r}
+#Output of summary statistics (min, max, mean, and s.d.) 
+sumtb<- matrix(NA,nrow = 4, ncol = 7  )
+# define an empty matrix to save the min, max, means and sd's
+#number of rows = 4 and the number of columns = columns in Rocket Fuel Deciles
+rownames(sumtb) <- c("min", "max", "mean", "sd")   # naming the rows
+colnames(sumtb) <- colnames(markdown)  # naming the columns
+sumtb[1,] <- round(apply(markdown,2,min),2)   #putting the min's of each variable into the first row
+sumtb[2,] <- round(apply(markdown,2,max),2)  # putting the max's into the second row
+sumtb[3,] <- round(apply(markdown,2,mean),2)  # putting the means into the third row
+# Note: use round(command, X) to limit to X decimal places
+# Note: use apply(df,margin, f) to apply function f to dataframe df on margin (1 for rows and 2 for columns) using function f (in this case mean)
+sumtb[4,] <- round(apply(markdown,2,sd),2) # putting the s.d.'s into the fourth row
+sumtb <- sumtb[,2:7] # rule out the first column since user_id is not meaningful to summarize. 
+kable(sumtb)  # make the output matrix as a table
+# This requires the library(knitr) called at the start
+
+```
